@@ -1,0 +1,52 @@
+Instalar o módulo
+
+npm install express mysql2 cors  
+
+Rodar a API
+
+node server.js
+
+Liberar o Powershell para instalar os módulos
+
+Set-ExecutionPolicy RemoteSigned -scope currentUser
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+app.delete('/player/deletePlayer/:id', (req, res) => {
+
+    const { id } = req.params;
+
+    db.query(
+        'DELETE FROM player WHERE id = ?',
+        [id],
+        (err, results) => {
+
+            if (err) {
+                return res.status(500).json(err);
+            }
+
+            if (results.affectedRows === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Player não encontrado'
+                });
+            }
+
+            res.json({
+                success: true,
+                message: 'Player deletado com sucesso'
+            });
+        }
+    );
+});
