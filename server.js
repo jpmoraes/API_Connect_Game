@@ -57,7 +57,7 @@ app.get('/player', (req, res) => {
     );
 });
 
-app.post('/player/insertPlayer', (req, res) => {
+app.post('/player/insertPlayer', (req,  res) => {
 
     const {nome} = req.body;
 
@@ -83,7 +83,7 @@ app.delete('/player/deletePlayer/:id', (req, res) => {
 
     const { id } = req.params;
 
-    console.log(req.body[0].id);
+    //console.log(req.body[0].id);
 
     db.query(
         'DELETE FROM player WHERE id = ?',
@@ -104,6 +104,35 @@ app.delete('/player/deletePlayer/:id', (req, res) => {
             res.json({
                 success: true,
                 message: 'Player deletado com sucesso'
+            });
+        }
+    );
+});
+
+app.put('/player/updatePlayer/:id', (req, res) => {
+
+    const { id } = req.params;
+    const { nome } = req.body;
+
+    db.query(
+        'UPDATE player SET nome = ? WHERE id = ?',
+        [nome, id],
+        (err, results) => {
+
+            if (err) {
+                return res.status(500).json(err);
+            }
+
+            if (results.affectedRows === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Player não encontrado'
+                });
+            }
+
+            res.json({
+                success: true,
+                message: 'Player atualizado com sucesso'
             });
         }
     );
