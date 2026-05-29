@@ -1,17 +1,19 @@
+require('dotenv').config();
+
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
 
 const app = express();
 
-app.use(cors()); 
+app.use(cors());
 app.use(express.json());
 
 const db = mysql.createConnection({
-    host: 'mysql.railway.internal',
-    user: 'root',
-    password: 'MgEQqtBgAyDEVEJKHAGMrFZrHdrEEBzH',
-    database: 'railway'
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
 });
 
 db.connect((err) => {
@@ -44,22 +46,21 @@ app.get('/player/:id', (req, res) => {
 app.get('/player', (req, res) => {
 
     db.query(
-        'SELECT * FROM player', 
-     
+        'SELECT * FROM player',
         (err, results) => {
 
             if (err) {
                 return res.status(500).json(err);
             }
 
-            res.json(results[0]);
+            res.json(results);
         }
     );
 });
 
-app.post('/player/insertPlayer', (req,  res) => {
+app.post('/player/insertPlayer', (req, res) => {
 
-    const {nome} = req.body;
+    const { nome } = req.body;
 
     db.query(
         'INSERT INTO player (nome) VALUES (?)',
@@ -78,12 +79,9 @@ app.post('/player/insertPlayer', (req,  res) => {
     );
 });
 
-
 app.delete('/player/deletePlayer/:id', (req, res) => {
 
     const { id } = req.params;
-
-    //console.log(req.body[0].id);
 
     db.query(
         'DELETE FROM player WHERE id = ?',
@@ -138,6 +136,6 @@ app.put('/player/updatePlayer/:id', (req, res) => {
     );
 });
 
-app.listen(3000, () => {
-    console.log('API rodando');
+app.listen(process.env.PORT, () => {
+    console.log(`API rodando na porta ${process.env.PORT}`);
 });
