@@ -136,6 +136,6 @@ app.put('/player/updatePlayer/:id', (req, res) => {
     );
 });
 
-app.listen(process.env.PORT, () => {
-    console.log(`API rodando na porta ${process.env.PORT}`);
+app.listen(3000, () => {
+    console.log('API rodando');
 });
